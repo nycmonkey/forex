@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package forex;
+
+// markup extensions
+import "google/api/annotations.proto";
+
+// Security service provides read access to Securities
+service Forex {
+    // GetSecurity fetches an individual security
+    rpc Convert (ConvertRequest) returns (ConvertResponse) {
+        option (google.api.http) = {
+            get: "/v1/convert/{as_of_date}/{from_currency}/{to_currency}/{amount}"
+        };
+    }
+}
+
+message ConvertRequest {
+    string as_of_date = 1; // date (in YYYY-MM-DD format) from which to select EOD forex rate
+    string from_currency = 2; // ISO 4217 code of input currency
+    string to_currency = 3; // ISO 4217 code of desired output currency
+    float amount = 4; // units of from_currency to convert into to_currency
+}
+
+message ConvertResponse {
+    float amount = 1; // output of converting from_currency into to_currency using the end-of-day foreign exchange rate as of the requested date
+    float rate_used = 2; // conversion rate applied
+}
